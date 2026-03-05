@@ -2,9 +2,13 @@
 
 import { create, findOne, userModel } from "../../DB/index.js";
 import {hash,compare,genSalt } from 'bcrypt'
-import { SALT_ROUND } from './../../../config/config.service.js';
-import { ConflictException, decrypt, encrypt, NorFoundException } from "../../common/utils/index.js";
- 
+import { ADMIN_REFRESH_TOKEN_SECRET_KEY, ADMIN_TOKEN_SECRET_KEY ,SALT_ROUND,USER_REFRESH_TOKEN_SECRET_KEY,USER_TOKEN_SECRET_KEY } from './../../../config/config.service.js';
+import { ConflictException, creatLoginCredentials, decrypt, encrypt, generateToken, getTokenSignature, NorFoundException } from "../../common/utils/index.js";
+ import jwt from 'jsonwebtoken'
+import { RoleEnum } from "../../common/enums/user.enum.js";
+import { TokenTypeEnum } from "../../common/enums/security.enum.js";
+  
+
 export const signup =async (inputs) => {
 
     const{username,password, email ,phone}=inputs;
@@ -34,7 +38,7 @@ export const signup =async (inputs) => {
   return user 
 }
 /////////////////////////////////////
-export const login =async (inputs) => {
+export const login =async (inputs ,issuer) => {
 
     const{ password, email }=inputs;
 
@@ -52,8 +56,11 @@ export const login =async (inputs) => {
   }
   const match = await compare(password, user.password)
   if(!match){
-//  throw new Error("Email not match ", {cause:{status: 404 }})  }
-throw NorFoundException({message:"NotFound"})}
-user.phone = await decrypt(user.phone)
-  return {user,match}
+ throw NorFoundException({message:"NotFound"})}
+// user.phone = await decrypt(user.phone)
+
+
+console.log(user.role);      /// storage db
+
+ return await creatLoginCredentials(user,issuer)
 }

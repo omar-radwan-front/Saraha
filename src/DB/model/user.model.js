@@ -3,7 +3,7 @@
 //  export const userModel = db.createCollection('Users')
 
 import mongoose from 'mongoose'
- import { GenderEnum, ProviderEnum } from '../../common/enums/index.js';
+ import { GenderEnum, ProviderEnum, RoleEnum } from '../../common/enums/index.js';
 
 
 
@@ -47,6 +47,11 @@ const userSchema = new mongoose.Schema({
         type : Number ,
         enum : Object.values(ProviderEnum),
         default : ProviderEnum.system
+     },
+    role :{
+        type : String ,
+        enum : Object.values(RoleEnum),
+        default : RoleEnum.User
      },
      profilePicture : String,
      coverProfilePicture : [String],

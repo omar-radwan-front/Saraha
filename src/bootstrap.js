@@ -6,6 +6,7 @@ import { connectDB } from './DB/connection.js';
 // import { connectDB } from './DB/connection';
 // import { NODE_ENV } from './../config/config.service.js';
 import { globalErrorHandling } from './common/utils/index.js';
+import { userRouter } from './modules/user/index.js';
  
 
 
@@ -28,6 +29,7 @@ app.get('/', (req , res , next ) => {
 
 // app . routing 
 app.use("/auth" , authRouter)
+app.use("/user" , userRouter)
 
 
 //invalid app routing method ,url 
